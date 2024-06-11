@@ -1,30 +1,56 @@
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:universal_io/io.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../models/user.dart';
 
 class UserService {
-  // Liste des utilisateurs en mémoire
-  List<User> _users = [];
+  late Future<Isar> db;
 
-  // Retourne tous les utilisateurs
-  List<User> getUsers() {
-    return _users;
+  UserService() {
+    db = _initDb();
   }
 
-  // Ajoute un utilisateur
-  void addUser(User user) {
-    _users.add(user);
-  }
-
-  // Met à jour un utilisateur
-  void updateUser(int index, User user) {
-    if (index >= 0 && index < _users.length) {
-      _users[index] = user;
+  Future<Isar> _initDb() async {
+    if (kIsWeb) {
+      // Pour le Web, utilisez un chemin par défaut
+      return await Isar.open(
+        [UserSchema],
+        directory: null, // Le Web n'a pas besoin de directory
+      );
+    } else {
+      // Pour les plateformes non-Web (Android, iOS, macOS, Linux, Windows)
+      final dir = await getApplicationDocumentsDirectory();
+      return await Isar.open(
+        [UserSchema],
+        directory: dir.path,
+      );
     }
   }
 
-  // Supprime un utilisateur
-  void deleteUser(int index) {
-    if (index >= 0 && index < _users.length) {
-      _users.removeAt(index);
-    }
+  Future<List<User>> getUsers() async {
+    final isar = await db;
+    return await isar.users.where().findAll();
+  }
+
+  Future<void> addUser(User user) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.users.put(user);
+    });
+  }
+
+  Future<void> updateUser(User user) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.users.put(user);
+    });
+  }
+
+  Future<void> deleteUser(int id) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.users.delete(id);
+    });
   }
 }

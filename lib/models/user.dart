@@ -1,7 +1,18 @@
-class User {
-  final String name;
-  final String email;
-  final int age;
+import 'package:isar/isar.dart';
 
-  User({required this.name, required this.email, required this.age});
+part 'user.g.dart';
+
+@collection
+class User {
+  Id id = Isar.autoIncrement; // Identifiant auto-incrémenté
+
+  late String name;
+  late String email;
+  late int age;
+
+  User({
+    required this.name,
+    required this.email,
+    required this.age,
+  });
 }

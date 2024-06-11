@@ -13,50 +13,75 @@ class UserListScreen extends StatefulWidget {
 }
 
 class _UserListScreenState extends State<UserListScreen> {
+  late Future<List<User>> _usersFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsers();
+  }
+
+  void _loadUsers() {
+    _usersFuture = widget.userService.getUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Liste des Utilisateurs'),
       ),
-      body: ListView.builder(
-        itemCount: widget.userService.getUsers().length,
-        itemBuilder: (context, index) {
-          final user = widget.userService.getUsers()[index];
-          return ListTile(
-            title: Text(user.name),
-            subtitle: Text('${user.email}\nÂge: ${user.age} ans'),
-            isThreeLine: true,
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () async {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateUserScreen(user: user),
+      body: FutureBuilder<List<User>>(
+        future: _usersFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Erreur: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('Aucun utilisateur trouvé.'));
+          } else {
+            final users = snapshot.data!;
+            return ListView.builder(
+              itemCount: users.length,
+              itemBuilder: (context, index) {
+                final user = users[index];
+                return ListTile(
+                  title: Text(user.name),
+                  subtitle: Text('${user.email}\nÂge: ${user.age} ans'),
+                  isThreeLine: true,
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  CreateUserScreen(user: user),
+                            ),
+                          );
+                          if (result != null && result is User) {
+                            await widget.userService.updateUser(result);
+                            setState(_loadUsers);
+                          }
+                        },
                       ),
-                    );
-                    if (result != null && result is User) {
-                      setState(() {
-                        widget.userService.updateUser(index, result);
-                      });
-                    }
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    setState(() {
-                      widget.userService.deleteUser(index);
-                    });
-                  },
-                ),
-              ],
-            ),
-          );
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () async {
+                          await widget.userService.deleteUser(user.id);
+                          setState(_loadUsers);
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -68,9 +93,8 @@ class _UserListScreenState extends State<UserListScreen> {
             ),
           );
           if (result != null && result is User) {
-            setState(() {
-              widget.userService.addUser(result);
-            });
+            await widget.userService.addUser(result);
+            setState(_loadUsers);
           }
         },
         child: Icon(Icons.add),
