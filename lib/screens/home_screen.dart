@@ -4,20 +4,23 @@ import 'settings_screen.dart';
 import '../services/user_service.dart';
 
 class HomeScreen extends StatefulWidget {
+  final UserService userService;
+
+  HomeScreen({required this.userService});
+
   @override
   HomeScreenState createState() => HomeScreenState();
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  final UserService _userService = UserService();
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      UserListScreen(userService: _userService),
+      UserListScreen(userService: widget.userService),
       SettingsScreen(),
-      Center(
+      const Center(
         child: Text('Déconnexion'),
       ),
     ];
@@ -35,7 +38,7 @@ class HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Center(
+        title: const Center(
           child: Text(
             'Gestion des Utilisateurs',
             style: TextStyle(color: Colors.white),

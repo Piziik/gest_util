@@ -1,12 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'services/user_service.dart';
+import 'models/user.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Future<Isar> initializeIsar() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return await Isar.open(
+      [UserSchema],
+      directory: dir.path,
+    );
+  }
+
+  final isar = await initializeIsar();
+  final userService = UserService(isar);
+
+  runApp(MyApp(userService: userService));
 }
 
 class MyApp extends StatelessWidget {
+  final UserService userService;
+
+  MyApp({required this.userService});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,8 +37,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(),
+        '/': (context) => LoginScreen(userService: userService),
+        '/home': (context) => HomeScreen(userService: userService),
       },
     );
   }

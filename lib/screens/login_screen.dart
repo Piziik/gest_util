@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import '../services/user_service.dart';
 
 class LoginScreen extends StatefulWidget {
+  final UserService userService;
+
+  LoginScreen({required this.userService});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -16,7 +21,11 @@ class _LoginScreenState extends State<LoginScreen> {
       final password = _passwordController.text;
 
       if (pseudo == "admin" && password == "password") {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(
+          context,
+          '/home',
+          arguments: widget.userService,
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Pseudo ou mot de passe incorrect")),

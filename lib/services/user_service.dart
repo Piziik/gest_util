@@ -1,45 +1,30 @@
 import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
 import '../models/user.dart';
 
 class UserService {
-  late Future<Isar> db;
+  final Isar db;
 
-  UserService() {
-    db = _initDb();
-  }
-
-  Future<Isar> _initDb() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return await Isar.open(
-      [UserSchema],
-      directory: dir.path,
-    );
-  }
+  UserService(this.db);
 
   Future<List<User>> getUsers() async {
-    final isar = await db;
-    return await isar.users.where().findAll();
+    return await db.users.where().findAll();
   }
 
   Future<void> addUser(User user) async {
-    final isar = await db;
-    await isar.writeTxn(() async {
-      await isar.users.put(user);
+    await db.writeTxn(() async {
+      await db.users.put(user);
     });
   }
 
   Future<void> updateUser(User user) async {
-    final isar = await db;
-    await isar.writeTxn(() async {
-      await isar.users.put(user);
+    await db.writeTxn(() async {
+      await db.users.put(user);
     });
   }
 
   Future<void> deleteUser(int id) async {
-    final isar = await db;
-    await isar.writeTxn(() async {
-      await isar.users.delete(id);
+    await db.writeTxn(() async {
+      await db.users.delete(id);
     });
   }
 }
