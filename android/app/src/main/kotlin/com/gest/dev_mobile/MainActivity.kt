@@ -1,4 +1,4 @@
-package com.example.gest_util
+package com.gest.dev_mobile
 
 import io.flutter.embedding.android.FlutterActivity
 

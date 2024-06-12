@@ -1,6 +1,6 @@
-# gest_util
+# dev_mobile
 
-A new Flutter project.
+A user mangement app
 
 ## Getting Started
 
