@@ -27,4 +27,17 @@ class UserService {
       await db.users.delete(id);
     });
   }
+
+  Future<User?> authenticate(String login, String password) async {
+    return await db.users.filter()
+        .loginEqualTo(login)
+        .and()
+        .passwordEqualTo(password)
+        .findFirst();
+  }
+
+  Future<bool> isDatabaseEmpty() async {
+    final count = await db.users.where().count();
+    return count == 0;
+  }
 }

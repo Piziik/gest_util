@@ -6,8 +6,9 @@ import '../services/user_service.dart';
 
 class UserListScreen extends StatefulWidget {
   final UserService userService;
+  final User currentUser;
 
-  UserListScreen({required this.userService});
+  UserListScreen({required this.userService, required this.currentUser});
 
   @override
   _UserListScreenState createState() => _UserListScreenState();
@@ -36,11 +37,11 @@ class _UserListScreenState extends State<UserListScreen> {
         future: _usersFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Erreur: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Aucun utilisateur trouvé.'));
+            return Center(child: Text('Aucun utilisateur trouvé.'));
           } else {
             final users = snapshot.data!;
             return ListView.builder(
@@ -63,28 +64,30 @@ class _UserListScreenState extends State<UserListScreen> {
                           );
                         },
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CreateUserScreen(user: user),
-                            ),
-                          );
-                          if (result != null && result is User) {
-                            await widget.userService.updateUser(result);
+                      if (widget.currentUser.role == 'admin') ...[
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateUserScreen(user: user),
+                              ),
+                            );
+                            if (result != null && result is User) {
+                              await widget.userService.updateUser(result);
+                              setState(_loadUsers);
+                            }
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () async {
+                            await widget.userService.deleteUser(user.id);
                             setState(_loadUsers);
-                          }
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () async {
-                          await widget.userService.deleteUser(user.id);
-                          setState(_loadUsers);
-                        },
-                      ),
+                          },
+                        ),
+                      ],
                     ],
                   ),
                 );
@@ -93,7 +96,8 @@ class _UserListScreenState extends State<UserListScreen> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: widget.currentUser.role == 'admin'
+          ? FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.push(
             context,
@@ -108,7 +112,8 @@ class _UserListScreenState extends State<UserListScreen> {
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blue,
-      ),
+      )
+          : null,
     );
   }
 }

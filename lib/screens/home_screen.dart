@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'user_list_screen.dart';
 import 'settings_screen.dart';
 import '../services/user_service.dart';
+import '../models/user.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserService userService;
+  final User currentUser;
   final ValueNotifier<Color> appBarColorNotifier;
 
-  HomeScreen({required this.userService, required this.appBarColorNotifier});
+  HomeScreen({required this.userService, required this.currentUser, required this.appBarColorNotifier});
 
   @override
   HomeScreenState createState() => HomeScreenState();
@@ -19,7 +21,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      UserListScreen(userService: widget.userService),
+      UserListScreen(userService: widget.userService, currentUser: widget.currentUser),
       SettingsScreen(appBarColorNotifier: widget.appBarColorNotifier),
       const Center(
         child: Text('Déconnexion'),

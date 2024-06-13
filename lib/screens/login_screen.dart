@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/user_service.dart';
+import '../models/user.dart';
 
 class LoginScreen extends StatefulWidget {
   final UserService userService;
@@ -13,24 +14,45 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _pseudoController = TextEditingController();
+  final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  void _login() {
+  void _login() async {
     if (_formKey.currentState!.validate()) {
-      final pseudo = _pseudoController.text;
+      final login = _loginController.text;
       final password = _passwordController.text;
 
-      if (pseudo == "admin" && password == "password") {
+      // Vérifier si la base de données est vide
+      final isDatabaseEmpty = await widget.userService.isDatabaseEmpty();
+
+      if (isDatabaseEmpty && login == "admin" && password == "password") {
+        final adminUser = User(
+          firstName: 'Admin',
+          lastName: 'User',
+          email: 'admin@example.com',
+          age: 0,
+          login: 'admin',
+          password: 'password',
+          role: 'admin',
+        );
         Navigator.pushReplacementNamed(
           context,
           '/home',
-          arguments: widget.userService,
+          arguments: {'userService': widget.userService, 'currentUser': adminUser},
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Pseudo ou mot de passe incorrect")),
-        );
+        final user = await widget.userService.authenticate(login, password);
+        if (user != null) {
+          Navigator.pushReplacementNamed(
+            context,
+            '/home',
+            arguments: {'userService': widget.userService, 'currentUser': user},
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Pseudo ou mot de passe incorrect")),
+          );
+        }
       }
     }
   }
@@ -55,11 +77,11 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TextFormField(
-                controller: _pseudoController,
-                decoration: InputDecoration(labelText: 'Pseudo'),
+                controller: _loginController,
+                decoration: InputDecoration(labelText: 'Login'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Veuillez entrer votre pseudo';
+                    return 'Veuillez entrer votre login';
                   }
                   return null;
                 },

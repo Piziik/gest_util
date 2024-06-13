@@ -46,7 +46,21 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           routes: {
             '/': (context) => LoginScreen(userService: userService, appBarColorNotifier: appBarColorNotifier),
-            '/home': (context) => HomeScreen(userService: userService, appBarColorNotifier: appBarColorNotifier),
+          },
+          onGenerateRoute: (settings) {
+            if (settings.name == '/home') {
+              final args = settings.arguments as Map<String, dynamic>;
+              return MaterialPageRoute(
+                builder: (context) {
+                  return HomeScreen(
+                    userService: args['userService'],
+                    currentUser: args['currentUser'],
+                    appBarColorNotifier: appBarColorNotifier,
+                  );
+                },
+              );
+            }
+            return null;
           },
         );
       },
