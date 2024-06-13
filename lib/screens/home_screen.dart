@@ -5,8 +5,9 @@ import '../services/user_service.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserService userService;
+  final ValueNotifier<Color> appBarColorNotifier;
 
-  HomeScreen({required this.userService});
+  HomeScreen({required this.userService, required this.appBarColorNotifier});
 
   @override
   HomeScreenState createState() => HomeScreenState();
@@ -19,7 +20,7 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
       UserListScreen(userService: widget.userService),
-      SettingsScreen(),
+      SettingsScreen(appBarColorNotifier: widget.appBarColorNotifier),
       const Center(
         child: Text('Déconnexion'),
       ),
@@ -37,7 +38,7 @@ class HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: widget.appBarColorNotifier.value,
         title: const Center(
           child: Text(
             'Gestion des Utilisateurs',

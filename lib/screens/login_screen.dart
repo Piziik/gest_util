@@ -3,8 +3,9 @@ import '../services/user_service.dart';
 
 class LoginScreen extends StatefulWidget {
   final UserService userService;
+  final ValueNotifier<Color> appBarColorNotifier;
 
-  LoginScreen({required this.userService});
+  LoginScreen({required this.userService, required this.appBarColorNotifier});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -38,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: widget.appBarColorNotifier.value,
         title: Center(
           child: Text(
             'Connexion',
