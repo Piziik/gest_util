@@ -48,7 +48,16 @@ class _UserListScreenState extends State<UserListScreen> {
                 final user = users[index];
                 return ListTile(
                   title: Text('${user.firstName} ${user.lastName}'),
-                  subtitle: Text('${user.email}\nÂge: ${user.age} ans'),
+                  subtitle: Text(
+                    'Email: ${user.email}\n'
+                        'Âge: ${user.age} ans\n'
+                        'Date de naissance: ${user.dateOfBirth ?? "N/A"}\n'
+                        'Numéro de téléphone: ${user.phoneNumber ?? "N/A"}\n'
+                        'Adresse: ${user.address ?? "N/A"}\n'
+                        'Genre: ${user.gender ?? "N/A"}\n'
+                        'Rôle: ${user.role}\n'
+                        'Login: ${user.login}',
+                  ),
                   isThreeLine: true,
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
