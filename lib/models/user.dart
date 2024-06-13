@@ -10,13 +10,13 @@ class User {
   late String lastName;
   late String email;
   late int age;
-  String? dateOfBirth; // Champ optionnel
-  String? address; // Champ optionnel
-  String? phoneNumber; // Champ optionnel
-  String? gender; // Champ optionnel
-  late String role; // Champ obligatoire avec valeur par défaut
-  late String login; // Champ obligatoire
-  late String password; // Champ obligatoire
+  String? dateOfBirth; // Optional
+  String? address; // Optional
+  String? phoneNumber; // Optional
+  String? gender; // Optional
+  late String role; // Required, default value : user
+  late String login; // Required
+  late String password; // Required
 
   User({
     this.id = Isar.autoIncrement,
@@ -28,7 +28,7 @@ class User {
     this.address,
     this.phoneNumber,
     this.gender,
-    this.role = 'user', // Valeur par défaut
+    this.role = 'user',
     required this.login,
     required this.password,
   });

@@ -49,7 +49,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
       _address = null;
       _phoneNumber = null;
       _gender = null;
-      _role = 'user'; // Valeur par défaut
+      _role = 'user'; // Default value
       _login = '';
       _password = '';
     }
@@ -62,7 +62,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         title: Text(widget.user == null ? 'Créer un Utilisateur' : 'Modifier un Utilisateur'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -70,7 +70,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
               children: <Widget>[
                 TextFormField(
                   initialValue: _firstName,
-                  decoration: InputDecoration(labelText: 'Prénom'),
+                  decoration: const InputDecoration(labelText: 'Prénom'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Veuillez entrer un prénom';
@@ -96,7 +96,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                 ),
                 TextFormField(
                   initialValue: _email,
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(labelText: 'Email'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Veuillez entrer un email';
@@ -109,7 +109,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                 ),
                 TextFormField(
                   initialValue: _age != 0 ? _age.toString() : '',
-                  decoration: InputDecoration(labelText: 'Âge'),
+                  decoration: const InputDecoration(labelText: 'Âge'),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -127,35 +127,35 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                 ),
                 TextFormField(
                   initialValue: _dateOfBirth,
-                  decoration: InputDecoration(labelText: 'Date de naissance'),
+                  decoration: const InputDecoration(labelText: 'Date de naissance'),
                   onSaved: (value) {
                     _dateOfBirth = value;
                   },
                 ),
                 TextFormField(
                   initialValue: _phoneNumber,
-                  decoration: InputDecoration(labelText: 'Numéro de téléphone'),
+                  decoration: const InputDecoration(labelText: 'Numéro de téléphone'),
                   onSaved: (value) {
                     _phoneNumber = value;
                   },
                 ),
                 TextFormField(
                   initialValue: _address,
-                  decoration: InputDecoration(labelText: 'Adresse'),
+                  decoration: const InputDecoration(labelText: 'Adresse'),
                   onSaved: (value) {
                     _address = value;
                   },
                 ),
                 TextFormField(
                   initialValue: _gender,
-                  decoration: InputDecoration(labelText: 'Genre'),
+                  decoration: const InputDecoration(labelText: 'Genre'),
                   onSaved: (value) {
                     _gender = value;
                   },
                 ),
                 DropdownButtonFormField<String>(
                   value: _role,
-                  decoration: InputDecoration(labelText: 'Rôle'),
+                  decoration: const InputDecoration(labelText: 'Rôle'),
                   items: <String>['user', 'admin'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -170,7 +170,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                 ),
                 TextFormField(
                   initialValue: _login,
-                  decoration: InputDecoration(labelText: 'Login'),
+                  decoration: const InputDecoration(labelText: 'Login'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Veuillez entrer un login';
@@ -183,7 +183,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                 ),
                 TextFormField(
                   initialValue: _password,
-                  decoration: InputDecoration(labelText: 'Mot de passe'),
+                  decoration: const InputDecoration(labelText: 'Mot de passe'),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -195,7 +195,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                     _password = value!;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {

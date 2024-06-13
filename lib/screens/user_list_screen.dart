@@ -36,11 +36,11 @@ class _UserListScreenState extends State<UserListScreen> {
         future: _usersFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Erreur: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Aucun utilisateur trouvé.'));
+            return const Center(child: Text('Aucun utilisateur trouvé.'));
           } else {
             final users = snapshot.data!;
             return ListView.builder(
@@ -64,7 +64,7 @@ class _UserListScreenState extends State<UserListScreen> {
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.edit),
+                        icon: const Icon(Icons.edit),
                         onPressed: () async {
                           final result = await Navigator.push(
                             context,
