@@ -47,7 +47,7 @@ class _UserListScreenState extends State<UserListScreen> {
               itemBuilder: (context, index) {
                 final user = users[index];
                 return ListTile(
-                  title: Text(user.name),
+                  title: Text('${user.firstName} ${user.lastName}'),
                   subtitle: Text('${user.email}\nÂge: ${user.age} ans'),
                   isThreeLine: true,
                   trailing: Row(

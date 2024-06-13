@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import '../models/user.dart';
 
 class CreateUserScreen extends StatefulWidget {
@@ -12,7 +13,8 @@ class CreateUserScreen extends StatefulWidget {
 
 class _CreateUserScreenState extends State<CreateUserScreen> {
   final _formKey = GlobalKey<FormState>();
-  late String _name;
+  late String _firstName;
+  late String _lastName;
   late String _email;
   late int _age;
 
@@ -20,11 +22,13 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
   void initState() {
     super.initState();
     if (widget.user != null) {
-      _name = widget.user!.name;
+      _firstName = widget.user!.firstName;
+      _lastName = widget.user!.lastName;
       _email = widget.user!.email;
       _age = widget.user!.age;
     } else {
-      _name = '';
+      _firstName = '';
+      _lastName = '';
       _email = '';
       _age = 0;
     }
@@ -43,7 +47,20 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
           child: Column(
             children: <Widget>[
               TextFormField(
-                initialValue: _name,
+                initialValue: _firstName,
+                decoration: InputDecoration(labelText: 'Prénom'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Veuillez entrer un prénom';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _firstName = value!;
+                },
+              ),
+              TextFormField(
+                initialValue: _lastName,
                 decoration: InputDecoration(labelText: 'Nom'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -52,7 +69,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                   return null;
                 },
                 onSaved: (value) {
-                  _name = value!;
+                  _lastName = value!;
                 },
               ),
               TextFormField(
@@ -91,7 +108,13 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    final newUser = User(name: _name, email: _email, age: _age);
+                    final newUser = User(
+                      id: widget.user?.id ?? Isar.autoIncrement, // Utiliser l'ID existant ou auto-incrémenter pour un nouvel utilisateur
+                      firstName: _firstName,
+                      lastName: _lastName,
+                      email: _email,
+                      age: _age,
+                    );
                     Navigator.pop(context, newUser);
                   }
                 },

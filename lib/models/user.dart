@@ -4,14 +4,17 @@ part 'user.g.dart';
 
 @collection
 class User {
-  Id id = Isar.autoIncrement; // Identifiant auto-incrémenté
+  Id id = Isar.autoIncrement;
 
-  late String name;
+  late String firstName;
+  late String lastName;
   late String email;
   late int age;
 
   User({
-    required this.name,
+    this.id = Isar.autoIncrement,
+    required this.firstName,
+    required this.lastName,
     required this.email,
     required this.age,
   });
