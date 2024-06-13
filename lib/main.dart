@@ -24,21 +24,31 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final ValueNotifier<Color> appBarColorNotifier = ValueNotifier<Color>(Colors.red);
+
   final UserService userService;
 
   MyApp({required this.userService});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Gestion des Utilisateurs',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => LoginScreen(userService: userService),
-        '/home': (context) => HomeScreen(userService: userService),
+    return ValueListenableBuilder<Color>(
+      valueListenable: appBarColorNotifier,
+      builder: (context, color, child) {
+        return MaterialApp(
+          title: 'Gestion des Utilisateurs',
+          theme: ThemeData(
+            primarySwatch: Colors.red,
+            appBarTheme: AppBarTheme(
+              backgroundColor: color,
+            ),
+          ),
+          initialRoute: '/',
+          routes: {
+            '/': (context) => LoginScreen(userService: userService, appBarColorNotifier: appBarColorNotifier),
+            '/home': (context) => HomeScreen(userService: userService, appBarColorNotifier: appBarColorNotifier),
+          },
+        );
       },
     );
   }
