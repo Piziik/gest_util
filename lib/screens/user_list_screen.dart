@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'create_user_screen.dart';
+import 'user_details_screen.dart'; // Importer le nouvel écran de détails utilisateur
 import '../models/user.dart';
 import '../services/user_service.dart';
 
@@ -48,28 +49,27 @@ class _UserListScreenState extends State<UserListScreen> {
                 final user = users[index];
                 return ListTile(
                   title: Text('${user.firstName} ${user.lastName}'),
-                  subtitle: Text(
-                    'Email: ${user.email}\n'
-                        'Âge: ${user.age} ans\n'
-                        'Date de naissance: ${user.dateOfBirth ?? "N/A"}\n'
-                        'Numéro de téléphone: ${user.phoneNumber ?? "N/A"}\n'
-                        'Adresse: ${user.address ?? "N/A"}\n'
-                        'Genre: ${user.gender ?? "N/A"}\n'
-                        'Rôle: ${user.role}\n'
-                        'Login: ${user.login}',
-                  ),
-                  isThreeLine: true,
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      IconButton(
+                        icon: Icon(Icons.info),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UserDetailsScreen(user: user),
+                            ),
+                          );
+                        },
+                      ),
                       IconButton(
                         icon: Icon(Icons.edit),
                         onPressed: () async {
                           final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  CreateUserScreen(user: user),
+                              builder: (context) => CreateUserScreen(user: user),
                             ),
                           );
                           if (result != null && result is User) {
