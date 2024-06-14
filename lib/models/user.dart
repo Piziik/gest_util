@@ -6,17 +6,17 @@ part 'user.g.dart';
 class User {
   Id id = Isar.autoIncrement;
 
-  late String firstName;
-  late String lastName;
-  late String email;
-  late int age;
+  String firstName;
+  String lastName;
+  String email;
+  int age;
   String? dateOfBirth; // Optional
   String? address; // Optional
   String? phoneNumber; // Optional
   String? gender; // Optional
-  late String role; // Required, default value : user
-  late String login; // Required
-  late String password; // Required
+  String role; // Required, default value : user
+  String login; // Required
+  String password; // Required
 
   User({
     this.id = Isar.autoIncrement,

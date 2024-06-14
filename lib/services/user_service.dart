@@ -37,7 +37,9 @@ class UserService {
   }
 
   Future<bool> isDatabaseEmpty() async {
-    final count = await db.users.where().count();
+    final count = await db.users.filter()
+        .roleEqualTo('admin')
+        .count();
     return count == 0;
   }
 }
